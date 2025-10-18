@@ -1,19 +1,24 @@
-import Home from "./client.page";
+import { supabase } from "@/lib/db/supabaseClient";
+import Home from "./components/Home";
 
-export default async function Page(
-  props: {
-    params: Promise<any>;
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-  }
-) {
-  const searchParams = await props.searchParams;
-  // we can perform some checks to see if the app has been installed and that it is still valid
-  const { shop, host } = searchParams;
-  if (!shop || !host) {
-    return <h1>Missing Shop and Host Parameters</h1>;
-  }
+interface Data {
+  shop_id: number;
+  access_token: string;
+}
 
-  // now we can use the new managed app bridge, so we don't need to
-  // worry about checking if the app is installed or not
-  return <Home />;
+export default async function Page(props: {
+  params: Promise<any>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+
+  const { data, error } = await supabase.from("shop_token").select("*").single()
+  console.log(data)
+  const params = await props.searchParams;
+
+  return (
+    <>
+      <h1>Shop: {params.shop}, Host: {params.host}</h1>
+      <Home />
+    </>
+  );
 }

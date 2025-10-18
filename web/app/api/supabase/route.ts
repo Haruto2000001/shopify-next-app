@@ -14,6 +14,7 @@ type Data = {
 
 export async function GET(req: Request) {
   // session token is located in the request headers
+  console.log("APIが実行されました。");
   const { data, error } = await supabase
     .from("shop_token")
     .select("*")
